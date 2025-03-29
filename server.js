@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Replace with your MongoDB Atlas connection string
-const uri = 'mongodb+srv://shopwithusadmin:securepassword123@cluster0.mongodb.net/shopwithus?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://shopwithusadmin:securepassword123@shopwithuscluster.7ydadym.mongodb.net/?retryWrites=true&w=majority&appName=ShopWithUsCluster';
 const client = new MongoClient(uri);
 
 let db;
