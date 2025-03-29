@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { MongoClient } = require('mongodb');
+const path = require('path'); // Add this line
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,10 +22,8 @@ async function connectDB() {
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Store logged-in users in memory (sessions)
 let loggedInUsers = {};
 
-// Routes
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'signup.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'login.html')));
 
@@ -46,7 +45,6 @@ app.get('/account-settings', (req, res) => {
   }
 });
 
-// Get user info
 app.get('/user-info', async (req, res) => {
   const sessionId = req.headers.cookie?.split('sessionId=')[1];
   if (sessionId && loggedInUsers[sessionId]) {
@@ -63,7 +61,6 @@ app.get('/user-info', async (req, res) => {
   }
 });
 
-// Check if user has consented to cookies
 app.get('/check-consent', async (req, res) => {
   const sessionId = req.headers.cookie?.split('sessionId=')[1];
   if (sessionId && loggedInUsers[sessionId]) {
@@ -76,7 +73,6 @@ app.get('/check-consent', async (req, res) => {
   }
 });
 
-// Sign-up endpoint
 app.post('/signup', async (req, res) => {
   const { name, username, password, confirmPassword } = req.body;
   if (password !== confirmPassword) {
@@ -96,7 +92,6 @@ app.post('/signup', async (req, res) => {
   res.status(200).send({ message: 'Account created!' });
 });
 
-// Login endpoint
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   const db = await connectDB();
@@ -111,7 +106,6 @@ app.post('/login', async (req, res) => {
   res.status(200).send({ message: 'Login successful!' });
 });
 
-// Save cookie consent response
 app.post('/save-consent', async (req, res) => {
   const { username, response } = req.body;
   const db = await connectDB();
@@ -119,7 +113,6 @@ app.post('/save-consent', async (req, res) => {
   res.status(200).send({ message: 'Consent saved!' });
 });
 
-// Logout endpoint
 app.get('/logout', (req, res) => {
   const sessionId = req.headers.cookie?.split('sessionId=')[1];
   if (sessionId && loggedInUsers[sessionId]) {
@@ -129,7 +122,6 @@ app.get('/logout', (req, res) => {
   res.redirect('/');
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
