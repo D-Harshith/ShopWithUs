@@ -1,9 +1,10 @@
+<!-- File: ShopWithUs/public/account-settings.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account - ShopWithUs</title>
+  <title>Account Settings - ShopWithUs</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -13,23 +14,23 @@
       <ul>
         <li><a href="/home">Home</a></li>
         <li><a href="/account-settings">Account</a></li>
+        <li><a href="/logout">Logout</a></li>
       </ul>
     </nav>
   </header>
-
-  <section id="account-settings">
-    <h1>Your Account</h1>
-    <div id="user-info">
-      <p><strong>Name:</strong> <span id="user-name"></span></p>
-      <p><strong>Username:</strong> <span id="user-username"></span></p>
+  <main>
+    <h1>Account Settings</h1>
+    <div class="account-info-box">
+      <p><strong>Prolific ID:</strong> <span id="user-name">Loading...</span></p>
+      <p>Manage your account details and preferences to customize your shopping experience.</p>
     </div>
-    <div class="cookie-info">
-      <h2>Why We Use Cookies</h2>
-      <p>At ShopWithUs, we use cookies to make your shopping experience smoother and more enjoyable. They help us remember your preferences and keep your cart ready for checkout.</p>
+    <div class="account-links">
+      <a href="/personalization" class="btn-primary">Personalization</a>
     </div>
-    <button id="logout-btn" class="btn-primary">Sign Out</button>
-  </section>
-
+    <div class="account-links">
+      <p><a href="/home">Back to Home</a></p>
+    </div>
+  </main>
   <script src="/script.js"></script>
 </body>
 </html>

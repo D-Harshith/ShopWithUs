@@ -1,28 +1,49 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In - ShopWithUs</title>
+  <title>Login - ShopWithUs</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <header>
     <div class="logo"><a href="/">ShopWithUs</a></div>
+    <nav>
+      <ul>
+      </ul>
+    </nav>
   </header>
 
-  <section id="login-page">
-    <h1>Sign In</h1>
-    <form id="login-form">
-      <label for="login-username">Username:</label>
-      <input type="text" id="login-username" required placeholder="Enter your username">
-      <label for="login-password">Password:</label>
-      <input type="password" id="login-password" required placeholder="Enter your password">
-      <button type="submit" class="btn-primary">Sign In</button>
+  <section>
+    <h1>Login</h1>
+    <form id="loginForm">
+      <label for="prolificId">Prolific ID</label>
+      <input type="text" id="prolificId" name="prolificId" placeholder="Enter Prolific ID" required>
+      <button type="submit" class="btn-primary">Login</button>
     </form>
-    <p>New to ShopWithUs? <a href="/">Create an account</a>.</p>
   </section>
 
-  <script src="/script.js"></script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const prolificId = formData.get('prolificId');
+
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prolificId }),
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        window.location.href = '/home';
+      } else {
+        alert('Login failed.');
+      }
+    });
+  </script>
 </body>
 </html>
