@@ -1,17 +1,14 @@
 {
   "name": "shopwithus",
   "version": "1.0.0",
-  "description": "An Amazon-themed e-commerce website",
+  "description": "A simple shopping website with consent management",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "body-parser": "^1.20.2",
-    "mongodb": "^6.5.0"
-  },
-  "engines": {
-    "node": "18.x"
+    "cookie-parser": "^1.4.6",
+    "uuid": "^9.0.0"
   }
 }
