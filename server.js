@@ -1,38 +1,38 @@
 // File: ShopWithUs/server.js
 const express = require('express');
-const fs = require('fs').promises;
-const path = require('path');
 const cookieParser = require('cookie-parser');
+const { MongoClient } = require('mongodb');
 const { v4: uuidv4 } = require('uuid');
+const path = require('path'); // Added path module
+require('dotenv').config();
 
 const app = express();
 const port = 3000;
 
+// MongoDB connection URI from environment variable
+const uri = process.env.MONGODB_URI;
+const client = new MongoClient(uri); // Removed deprecated options
+
+let db;
+
+// Connect to MongoDB
+async function connectToMongoDB() {
+  try {
+    await client.connect();
+    console.log('Connected to MongoDB Atlas');
+    db = client.db('shopwithus'); // Database name (adjust if different)
+  } catch (err) {
+    console.error('Failed to connect to MongoDB Atlas:', err);
+    process.exit(1);
+  }
+}
+
+// Initialize MongoDB connection
+connectToMongoDB();
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static('public'));
-
-const userResponsesFile = path.join(__dirname, 'user_responses.json');
-
-async function readUserResponses() {
-  try {
-    const data = await fs.readFile(userResponsesFile, 'utf8');
-    return JSON.parse(data);
-  } catch (err) {
-    if (err.code === 'ENOENT') return [];
-    throw err;
-  }
-}
-
-async function writeUserResponses(responses) {
-  try {
-    await fs.writeFile(userResponsesFile, JSON.stringify(responses, null, 2));
-    console.log('Successfully wrote to user_responses.json');
-  } catch (err) {
-    console.error('Error writing to user_responses.json:', err.message);
-    throw err;
-  }
-}
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
@@ -40,36 +40,42 @@ app.get('/', (req, res) => {
 
 app.post('/login', async (req, res) => {
   const { prolificId } = req.body;
-  const normalizedProlificId = prolificId.trim(); // Normalize prolificId
+  const normalizedProlificId = prolificId.trim();
   console.log(`POST /login - Prolific ID: ${prolificId}, Normalized Prolific ID: ${normalizedProlificId}`);
 
   if (!normalizedProlificId) {
     return res.status(400).json({ error: 'Prolific ID is required' });
   }
 
-  let responses = await readUserResponses();
-  let user = responses.find(r => r.prolificId === normalizedProlificId);
+  try {
+    const usersCollection = db.collection('users');
+    let user = await usersCollection.findOne({ prolificId: normalizedProlificId });
 
-  if (!user) {
-    user = {
-      prolificId: normalizedProlificId,
-      cookieResponse: null,
-      reportText: null,
-      llmConsent: true, // Default LLM consent to true
-      timestamp: new Date().toISOString()
-    };
-    responses.push(user);
-    await writeUserResponses(responses);
-    console.log(`New user created - Prolific ID: ${normalizedProlificId}`);
+    if (!user) {
+      user = {
+        prolificId: normalizedProlificId,
+        cookieResponse: null,
+        reportText: null,
+        llmConsent: true, // Default LLM consent to true
+        timestamp: new Date().toISOString(),
+      };
+      await usersCollection.insertOne(user);
+      console.log(`New user created - Prolific ID: ${normalizedProlificId}`);
+    }
+
+    const sessionId = uuidv4();
+    await usersCollection.updateOne(
+      { prolificId: normalizedProlificId },
+      { $set: { sessionId } }
+    );
+
+    res.cookie('sessionId', sessionId, { httpOnly: true, sameSite: 'strict' });
+    console.log(`Login successful - Prolific ID: ${normalizedProlificId}, Session ID set: ${sessionId}`);
+    res.json({ message: 'Login successful' });
+  } catch (err) {
+    console.error('Error during login:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  const sessionId = uuidv4();
-  user.sessionId = sessionId;
-  await writeUserResponses(responses);
-
-  res.cookie('sessionId', sessionId, { httpOnly: true, sameSite: 'strict' });
-  console.log(`Login successful - Prolific ID: ${normalizedProlificId}, Session ID set: ${sessionId}`);
-  res.json({ message: 'Login successful' });
 });
 
 app.get('/user-info', async (req, res) => {
@@ -81,17 +87,21 @@ app.get('/user-info', async (req, res) => {
     return res.status(401).json({ error: 'Not authenticated' });
   }
 
-  const responses = await readUserResponses();
-  console.log('Current user responses in /user-info:', JSON.stringify(responses, null, 2));
-  const user = responses.find(r => r.sessionId === sessionId);
+  try {
+    const usersCollection = db.collection('users');
+    const user = await usersCollection.findOne({ sessionId });
 
-  if (!user) {
-    console.error(`User not found for Session ID: ${sessionId}`);
-    return res.status(404).json({ error: 'User not found' });
+    if (!user) {
+      console.error(`User not found for Session ID: ${sessionId}`);
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    console.log(`User found for Prolific ID: ${user.prolificId}`);
+    res.json({ prolificId: user.prolificId });
+  } catch (err) {
+    console.error('Error fetching user info:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  console.log(`User found for Prolific ID: ${user.prolificId}`);
-  res.json({ prolificId: user.prolificId });
 });
 
 app.get('/check-consent', async (req, res) => {
@@ -103,23 +113,27 @@ app.get('/check-consent', async (req, res) => {
     return res.status(401).json({ error: 'Not authenticated' });
   }
 
-  const responses = await readUserResponses();
-  console.log('Current user responses in /check-consent:', JSON.stringify(responses, null, 2));
-  const user = responses.find(r => r.sessionId === sessionId);
+  try {
+    const usersCollection = db.collection('users');
+    const user = await usersCollection.findOne({ sessionId });
 
-  if (!user) {
-    console.error(`User not found for Session ID: ${sessionId}`);
-    return res.status(404).json({ error: 'User not found' });
+    if (!user) {
+      console.error(`User not found for Session ID: ${sessionId}`);
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const hasConsented = user.cookieResponse !== null;
+    console.log(`Check consent for Prolific ID ${user.prolificId}: hasConsented=${hasConsented}, cookieResponse=${user.cookieResponse}, userResponse=${JSON.stringify(user)}`);
+    res.json({ hasConsented, userResponse: user });
+  } catch (err) {
+    console.error('Error checking consent:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  const hasConsented = user.cookieResponse !== null;
-  console.log(`Check consent for Prolific ID ${user.prolificId}: hasConsented=${hasConsented}, cookieResponse=${user.cookieResponse}, userResponse=${JSON.stringify(user)}`);
-  res.json({ hasConsented, userResponse: user });
 });
 
 app.post('/save-consent', async (req, res) => {
   const { prolificId, response, reportText } = req.body;
-  const normalizedProlificId = prolificId.trim(); // Normalize prolificId
+  const normalizedProlificId = prolificId.trim();
   console.log(`POST /save-consent - Prolific ID: ${prolificId}, Normalized Prolific ID: ${normalizedProlificId}, Response: ${response}, ReportText: ${reportText}`);
 
   if (!normalizedProlificId || !response) {
@@ -132,46 +146,53 @@ app.post('/save-consent', async (req, res) => {
     return res.status(400).json({ error: 'Invalid prolificId: "unknown" is not allowed' });
   }
 
-  let responses = await readUserResponses();
-  console.log('Current user responses:', JSON.stringify(responses, null, 2));
+  try {
+    const usersCollection = db.collection('users');
+    const user = await usersCollection.findOne({ prolificId: normalizedProlificId });
 
-  let user = responses.find(r => r.prolificId === normalizedProlificId);
-  if (!user) {
-    console.error(`User not found for Prolific ID: ${normalizedProlificId}`);
-    return res.status(404).json({ error: 'User not found' });
+    if (!user) {
+      console.error(`User not found for Prolific ID: ${normalizedProlificId}`);
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    console.log('User before update:', JSON.stringify(user));
+    await usersCollection.updateOne(
+      { prolificId: normalizedProlificId },
+      { $set: { cookieResponse: response, reportText, timestamp: new Date().toISOString() } }
+    );
+    console.log(`Consent saved for Prolific ID ${normalizedProlificId}: ${response}`);
+    res.json({ message: 'Consent saved' });
+  } catch (err) {
+    console.error('Error saving consent:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  console.log('User before update:', JSON.stringify(user));
-  user.cookieResponse = response;
-  user.reportText = reportText;
-  user.timestamp = new Date().toISOString();
-  console.log('User after update:', JSON.stringify(user));
-
-  await writeUserResponses(responses);
-
-  console.log(`Consent saved for Prolific ID ${normalizedProlificId}: ${response}`);
-  res.json({ message: 'Consent saved' });
 });
 
 app.post('/save-llm-consent', async (req, res) => {
   const { prolificId, useData } = req.body;
-  const normalizedProlificId = prolificId.trim(); // Normalize prolificId
+  const normalizedProlificId = prolificId.trim();
   console.log(`POST /save-llm-consent - Prolific ID: ${prolificId}, Normalized Prolific ID: ${normalizedProlificId}, UseData: ${useData}`);
 
-  let responses = await readUserResponses();
-  let user = responses.find(r => r.prolificId === normalizedProlificId);
+  try {
+    const usersCollection = db.collection('users');
+    const user = await usersCollection.findOne({ prolificId: normalizedProlificId });
 
-  if (!user) {
-    console.error(`User not found for Prolific ID: ${normalizedProlificId}`);
-    return res.status(404).json({ error: 'User not found' });
+    if (!user) {
+      console.error(`User not found for Prolific ID: ${normalizedProlificId}`);
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    await usersCollection.updateOne(
+      { prolificId: normalizedProlificId },
+      { $set: { llmConsent: useData, timestamp: new Date().toISOString() } }
+    );
+
+    console.log(`LLM consent saved for Prolific ID ${normalizedProlificId}: ${useData}`);
+    res.json({ message: 'LLM consent saved' });
+  } catch (err) {
+    console.error('Error saving LLM consent:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  user.llmConsent = useData;
-  user.timestamp = new Date().toISOString();
-  await writeUserResponses(responses);
-
-  console.log(`LLM consent saved for Prolific ID ${normalizedProlificId}: ${useData}`);
-  res.json({ message: 'LLM consent saved' });
 });
 
 app.get('/get-llm-consent', async (req, res) => {
@@ -183,17 +204,21 @@ app.get('/get-llm-consent', async (req, res) => {
     return res.status(401).json({ error: 'Not authenticated' });
   }
 
-  const responses = await readUserResponses();
-  console.log('Current user responses in /get-llm-consent:', JSON.stringify(responses, null, 2));
-  const user = responses.find(r => r.sessionId === sessionId);
+  try {
+    const usersCollection = db.collection('users');
+    const user = await usersCollection.findOne({ sessionId });
 
-  if (!user) {
-    console.error(`User not found for Session ID: ${sessionId}`);
-    return res.status(404).json({ error: 'User not found' });
+    if (!user) {
+      console.error(`User not found for Session ID: ${sessionId}`);
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    console.log(`LLM consent for Prolific ID ${user.prolificId}: ${user.llmConsent}`);
+    res.json({ useData: user.llmConsent });
+  } catch (err) {
+    console.error('Error fetching LLM consent:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  console.log(`LLM consent for Prolific ID ${user.prolificId}: ${user.llmConsent}`);
-  res.json({ useData: user.llmConsent });
 });
 
 app.get('/logout', async (req, res) => {
@@ -201,12 +226,15 @@ app.get('/logout', async (req, res) => {
   console.log(`GET /logout - Session ID: ${sessionId}`);
 
   if (sessionId) {
-    let responses = await readUserResponses();
-    let user = responses.find(r => r.sessionId === sessionId);
-    if (user) {
-      user.sessionId = null;
-      await writeUserResponses(responses);
-      console.log(`Logout successful - Session ID cleared for Prolific ID: ${user.prolificId}`);
+    try {
+      const usersCollection = db.collection('users');
+      await usersCollection.updateOne(
+        { sessionId },
+        { $set: { sessionId: null } }
+      );
+      console.log(`Logout successful - Session ID cleared`);
+    } catch (err) {
+      console.error('Error during logout:', err.message);
     }
   }
 
