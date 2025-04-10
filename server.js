@@ -10,7 +10,7 @@ const app = express();
 const port = 3000;
 
 // MongoDB connection URI from environment variable
-const uri = "mongodb+srv://h460635:fstDxMwbFaKjiehc@shopwithuscluster.7ydadym.mongodb.net/?retryWrites=true&w=majority&appName=ShopWithUsCluster";
+const uri = MONGODB_URI;
 const client = new MongoClient(uri); // Removed deprecated options
 
 let db;
