@@ -1,24 +1,18 @@
-// File: ShopWithUs/public/script.js
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded');
-  // Trigger popups immediately on page load for /home
   if (window.location.pathname === '/home') {
     checkAndShowPopups();
   }
-  // Update this line to include /account-settings
   if (window.location.pathname === '/home' || window.location.pathname === '/personalization' || window.location.pathname === '/account-settings') loadUserInfo();
   if (window.location.pathname === '/llm-consent') loadLLMConsent();
 });
 
 function checkAndShowPopups(attempt = 1, maxAttempts = 5) {
   console.log(`Checking if popups should be shown, attempt ${attempt}`);
-
-  // Only show popups on the home page
   if (window.location.pathname !== '/home') {
     console.log('Not on home page, skipping popup check');
     return;
   }
-
   console.log('Fetching user info');
   fetch('/user-info', { credentials: 'include' })
     .then(response => {
@@ -44,10 +38,8 @@ function checkAndShowPopups(attempt = 1, maxAttempts = 5) {
           return;
         }
       }
-      const prolificId = user.prolificId.trim(); // Normalize prolificId
+      const prolificId = user.prolificId.trim();
       console.log('Normalized Prolific ID:', prolificId);
-
-      // Check if the user has already responded to the cookie consent
       fetch('/check-consent', { credentials: 'include' })
         .then(response => {
           console.log('Check consent response status:', response.status);
@@ -62,7 +54,6 @@ function checkAndShowPopups(attempt = 1, maxAttempts = 5) {
           console.log('Consent check response:', data);
           if (data.hasConsented) {
             console.log('User has already responded to cookie consent, checking LLM consent');
-            // Check if LLM consent has been provided
             fetch('/get-llm-consent', { credentials: 'include' })
               .then(response => {
                 console.log('LLM consent response status:', response.status);
@@ -77,9 +68,8 @@ function checkAndShowPopups(attempt = 1, maxAttempts = 5) {
                 console.log('LLM consent response:', llmData);
                 if (llmData.useData === true || llmData.useData === false) {
                   console.log('User has already responded to LLM consent, skipping popups');
-                  return; // Skip both popups if both consents are provided
+                  return;
                 } else {
-                  // Show LLM popup after a 1-second delay if cookie consent is done but LLM consent is not
                   setTimeout(() => {
                     console.log('Showing LLM popup after 1-second delay');
                     showLLMWarning(prolificId);
@@ -99,7 +89,6 @@ function checkAndShowPopups(attempt = 1, maxAttempts = 5) {
                 }
               });
           } else {
-            // Show the cookie popup after a 1-second delay if no cookie consent yet
             setTimeout(() => {
               console.log('Showing cookie popup for all users after 1-second delay');
               showCookiePopup(prolificId);
@@ -187,7 +176,7 @@ function showCookiePopup(prolificId) {
 
 function saveConsent(prolificId, response, reportText = null) {
   console.log(`Saving cookie consent for Prolific ID ${prolificId}:`, response, reportText);
-  const normalizedProlificId = prolificId.trim(); // Normalize prolificId
+  const normalizedProlificId = prolificId.trim();
   console.log('Normalized Prolific ID for save:', normalizedProlificId);
   const requestBody = JSON.stringify({ prolificId: normalizedProlificId, response, reportText });
   console.log('Request body:', requestBody);
@@ -210,7 +199,6 @@ function saveConsent(prolificId, response, reportText = null) {
     .then(data => {
       console.log('Consent saved successfully:', data);
       document.querySelector('.popup').remove();
-      // Show the LLM popup after a 1-second delay
       setTimeout(() => {
         console.log('Showing LLM warning after 1-second delay');
         showLLMWarning(normalizedProlificId);
@@ -219,7 +207,6 @@ function saveConsent(prolificId, response, reportText = null) {
     .catch(err => {
       console.error('Error saving consent:', err.message);
       document.querySelector('.popup').remove();
-      // Still show LLM popup after a 1-second delay even if saving fails
       setTimeout(() => {
         console.log('Showing LLM warning after 1-second delay due to error');
         showLLMWarning(normalizedProlificId);
@@ -247,12 +234,12 @@ function showLLMWarning(prolificId) {
   });
 }
 
-function saveLLMConsent(prolificId, useData) {
-  console.log(`Saving LLM consent for Prolific ID ${prolificId}:`, useData);
+function saveLLMConsent(prolificId, useData, toggleResponse) {
+  console.log(`Saving LLM consent for Prolific ID ${prolificId}: useData=${useData}, toggleResponse=${toggleResponse}`);
   fetch('/save-llm-consent', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prolificId, useData }),
+    body: JSON.stringify({ prolificId, useData, toggleResponse }),
     credentials: 'include'
   })
     .then(res => {
@@ -305,17 +292,27 @@ function loadLLMConsent() {
     .then(user => {
       const prolificId = user.prolificId;
 
-      document.getElementById('ok-btn').addEventListener('click', () => {
-        fetch('/save-llm-consent', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prolificId, useData: true }),
-          credentials: 'include'
+      fetch('/get-llm-consent', { credentials: 'include' })
+        .then(response => {
+          if (!response.ok) {
+            return response.text().then(text => {
+              throw new Error(`Failed to fetch LLM consent: ${response.status} - ${text}`);
+            });
+          }
+          return response.json();
         })
-          .then(() => {
-            window.location.href = '/home';
-          })
-          .catch(err => console.error('Error confirming LLM consent:', err));
+        .then(llmData => {
+          console.log('LLM consent data:', llmData);
+          const toggleSwitch = document.getElementById('toggle-response');
+          if (toggleSwitch) {
+            toggleSwitch.checked = llmData.toggleResponse || false;
+          }
+        })
+        .catch(err => console.error('Error fetching LLM consent:', err));
+
+      document.getElementById('ok-btn').addEventListener('click', () => {
+        const toggleResponse = document.getElementById('toggle-response').checked;
+        saveLLMConsent(prolificId, true, toggleResponse);
       });
 
       document.getElementById('opt-out-btn').addEventListener('click', () => {
@@ -334,19 +331,22 @@ function showOptOutConfirmation(prolificId) {
       <h2>Opt me out of training LLM</h2>
       <p>Are you sure you want to opt out of LLM training?</p>
       <div class="buttons">
-        <button id="confirm-opt-out" class="accept-btn">Yes</button>
-        <button id="cancel-opt-out" class="opt-out-btn">No</button>
+        <button id="cancel-opt-out" class="accept-btn">Cancel</button>
+        <button id="confirm-opt-out" class="opt-out-btn">Yes</button>
       </div>
     </div>
   `;
   document.body.appendChild(confirmationPopup);
 
-  document.getElementById('confirm-opt-out').addEventListener('click', () => {
-    saveLLMConsent(prolificId, false);
+  document.getElementById('cancel-opt-out').addEventListener('click', () => {
+    const toggleResponse = document.getElementById('toggle-response').checked;
+    saveLLMConsent(prolificId, true, toggleResponse);
     document.querySelector('.popup').remove();
   });
 
-  document.getElementById('cancel-opt-out').addEventListener('click', () => {
+  document.getElementById('confirm-opt-out').addEventListener('click', () => {
+    const toggleResponse = document.getElementById('toggle-response').checked;
+    saveLLMConsent(prolificId, false, toggleResponse);
     document.querySelector('.popup').remove();
   });
 }

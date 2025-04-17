@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home - ShopWithUs</title>
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    .product {
+      position: relative;
+      cursor: pointer;
+    }
+    .product.selected::after {
+      content: '✔';
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 24px;
+      height: 24px;
+      background-color: #ff9900;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .checkout-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background-color: #ff9900;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .checkout-btn:hover {
+      background-color: #e68a00;
+    }
+    .items-container {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .items-container div {
+      margin: 5px 0;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -23,21 +65,272 @@
     <h1>Welcome to ShopWithUs</h1>
     <p>Explore our products and start shopping!</p>
     <div class="products">
-      <div class="product">
-        <img src="https://www.thermaltake.com/media/catalog/product/cache/cc8b24283b13da6bc2ff91682c03b54b/x/c/xcomfort_blackred01.jpg" alt="Product 1">
-        <p>Gaming chair: $75</p>
+      <div class="product" data-name="Gaming chair">
+        <img src="https://images-na.ssl-images-amazon.com/images/G/01/DiscoTec/2025/Vionic/amazon_HP_desktop_QuadCard_Vionic_186x116_2_1x._SY116_CB546706743_.jpg" alt="Product 1">
+        <p><b>Gaming chair</b></p>
+        <p>Before tariff: $75</p>
+        <p>After tariff: $90</p>
       </div>
-      <div class="product">
-        <img src="https://i5.walmartimages.com/seo/Hiboy-S2-MAX-Electric-Scooter-Upgraded-500-W-Motor-10-In-Air-filled-Tires-40-4-Miles-Range-19-Mph-Speed-Portable-Commuting-Adults-Double-Braking-Syst_dbb46623-4a0e-400a-bbb6-e9064292debd.7829e3a7d5c8247366f40b9fbf9b5c32.jpeg?odnHeight=640&odnWidth=640&odnBg=FFFFFF" alt="Product 2">
-        <p>Electric scooter: $200</p>
+      <div class="product" data-name="Electric scooter">
+        <img src="https://images-na.ssl-images-amazon.com/images/G/01/DiscoTec/2025/Vionic/amazon_HP_desktop_QuadCard_Vionic_186x116_1_1x._SY116_CB546706743_.jpg" alt="Product 2">
+        <p><b>Electric scooter</b></p>
+        <p>Before tariff: $175</p>
+        <p>After tariff: $190</p>
       </div>
-      <div class="product">
-        <img src="https://img.kwcdn.com/product/open/2024-07-01/1719819591822-a0b546152e4e40c9beae97f63308fff0-goods.jpeg?imageView2/2/w/800/q/70/format/webp" alt="Product 3">
-        <p>Drone: $100</p>
+      <div class="product" data-name="Drone">
+        <img src="https://images-na.ssl-images-amazon.com/images/G/01/DiscoTec/2025/Vionic/amazon_HP_desktop_QuadCard_Vionic_186x116_3_1x._SY116_CB546706743_.jpg" alt="Product 3">
+        <p><b>Drone</b></p>
+        <p>Before tariff: $175</p>
+        <p>After tariff: $190</p>
+      </div>
+      <div class="product" data-name="Casual shoe">
+        <img src="https://images-na.ssl-images-amazon.com/images/G/01/DiscoTec/2025/Vionic/amazon_HP_desktop_QuadCard_Vionic_186x116_4_1x._SY116_CB546706743_.jpg" alt="Product 4">
+        <p><b>Casual shoe</b></p>
+        <p>Before tariff: $60</p>
+        <p>After tariff: $75</p>
+      </div>
+      <div class="product" data-name="Drone">
+        <img src="https://images-na.ssl-images-amazon.com/images/G/01/DiscoTec/2025/Vionic/amazon_HP_desktop_QuadCard_Vionic_186x116_3_1x._SY116_CB546706743_.jpg" alt="Product 5">
+        <p><b>Drone</b></p>
+        <p>Before tariff: $175</p>
+        <p>After tariff: $190</p>
+      </div>
+      <div class="product" data-name="Casual shoe">
+        <img src="https://images-na.ssl-images-amazon.com/images/G/01/DiscoTec/2025/Vionic/amazon_HP_desktop_QuadCard_Vionic_186x116_4_1x._SY116_CB546706743_.jpg" alt="Product 6">
+        <p><b>Casual shoe</b></p>
+        <p>Before tariff: $60</p>
+        <p>After tariff: $75</p>
+      </div>
+      <div class="product" data-name="14 Pcs Pots and Pans Set Nonstick,Kitchen Cookware Set">
+        <img src="https://m.media-amazon.com/images/I/41BpYsAam3L._MCnd_AC_.jpg" alt="Product 7">
+        <p><b>14 Pcs Pots and Pans Set Nonstick,Kitchen Cookware Set</b></p>
+        <p>Before tariff: $75</p>
+        <p>After tariff: $90</p>
+      </div>
+      <div class="product" data-name="21 Pcs Pots and Pans Set Nonstick,Kitchen Cookware Set">
+        <img src="https://m.media-amazon.com/images/I/512CiGsUx-L._MCnd_AC_.jpg" alt="Product 8">
+        <p><b>21 Pcs Pots and Pans Set Nonstick,Kitchen Cookware Set</b></p>
+        <p>Before tariff: $175</p>
+        <p>After tariff: $190</p>
+      </div>
+      <div class="product" data-name="Non Stick Kitchen Cookware 15-Piece Set">
+        <img src="https://m.media-amazon.com/images/I/41RozqkS3BL._MCnd_AC_.jpg" alt="Product 9">
+        <p><b>Non Stick Kitchen Cookware 15-Piece Set</b></p>
+        <p>Before tariff: $175</p>
+        <p>After tariff: $190</p>
+      </div>
+      <div class="product" data-name="15 Pcs Pots and Pans Set Nonstick Cookware Set">
+        <img src="https://m.media-amazon.com/images/I/416JTtTLs5L._MCnd_AC_.jpg" alt="Product 10">
+        <p><b>15 Pcs Pots and Pans Set Nonstick Cookware Set</b></p>
+        <p>Before tariff: $60</p>
+        <p>After tariff: $75</p>
+      </div>
+      <div class="product" data-name="T-fal Signature Nonstick Cookware Set 12 Piece">
+        <img src="https://m.media-amazon.com/images/I/51DKFBdM+aL._MCnd_AC_.jpg" alt="Product 11">
+        <p><b>T-fal Signature Nonstick Cookware Set 12 Piece</b></p>
+        <p>Before tariff: $175</p>
+        <p>After tariff: $190</p>
+      </div>
+      <div class="product" data-name="Non Stick Pots and Pans Set, Cookware Sets Nonstick">
+        <img src="https://m.media-amazon.com/images/I/41sXm6qMaJL._MCnd_AC_.jpg" alt="Product 12">
+        <p><b>Non Stick Pots and Pans Set, Cookware Sets Nonstick</b></p>
+        <p>Before tariff: $60</p>
+        <p>After tariff: $75</p>
+      </div>
+      <div class="product" data-name="TruSkin Hyaluronic Acid Serum for Face">
+        <img src="https://m.media-amazon.com/images/I/51KfJqoI7VL._SX679_.jpg" alt="Product 13">
+        <p><b>TruSkin Hyaluronic Acid Serum for Face</b></p>
+        <p>Before tariff: $16</p>
+        <p>After tariff: $31</p>
+      </div>
+      <div class="product" data-name="TruSkin Vitamin C Cream for Face – Brightening Moisturizer">
+        <img src="https://m.media-amazon.com/images/I/617QHVM-dXL._SX679_.jpg" alt="Product 14">
+        <p><b>TruSkin Vitamin C Cream for Face – Brightening Moisturizer</b></p>
+        <p>Before tariff: $16</p>
+        <p>After tariff: $31</p>
+      </div>
+      <div class="product" data-name="Olay Vitamin C Face Moisturizer, Brightening Cream for Women">
+        <img src="https://m.media-amazon.com/images/I/41TklAR+ioL._SY300_SX300_.jpg" alt="Product 15">
+        <p><b>Olay Vitamin C Face Moisturizer, Brightening Cream for Women</b></p>
+        <p>Before tariff: $24</p>
+        <p>After tariff: $39</p>
+      </div>
+      <div class="product" data-name="Cetaphil Face & Body Moisturizer">
+        <img src="https://m.media-amazon.com/images/I/71+qg1xeM9L._AC_UL480_FMwebp_QL65_.jpg" alt="Product 16">
+        <p><b>Cetaphil Face & Body Moisturizer</b></p>
+        <p>Before tariff: $20</p>
+        <p>After tariff: $35</p>
+      </div>
+      <div class="product" data-name="Aquaphor Healing Ointment">
+        <img src="https://m.media-amazon.com/images/I/41b-CcZkY5L._SX300_SY300_QL70_FMwebp_.jpg" alt="Product 17">
+        <p><b>Aquaphor Healing Ointment</b></p>
+        <p>Before tariff: $18</p>
+        <p>After tariff: $33</p>
+      </div>
+      <div class="product" data-name="eos Shea Better Body Lotion- Vanilla Cashmere">
+        <img src="https://m.media-amazon.com/images/I/31IObY4C0xL._SY300_SX300_QL70_FMwebp_.jpg" alt="Product 18">
+        <p><b>eos Shea Better Body Lotion- Vanilla Cashmere</b></p>
+        <p>Before tariff: $8.7</p>
+        <p>After tariff: $23.7</p>
+      </div>
+      <div class="product" data-name="Ring Wired Doorbell Plus (Video Doorbell Pro)">
+        <img src="https://m.media-amazon.com/images/I/619mM1ncz4L._SY450_.jpg" alt="Product 19">
+        <p><b>Ring Wired Doorbell Plus (Video Doorbell Pro)</b></p>
+        <p>Before tariff: $150</p>
+        <p>After tariff: $165</p>
+      </div>
+      <div class="product" data-name="Ring Indoor Cam (newest model)">
+        <img src="https://m.media-amazon.com/images/I/51keHnu-7YL._SY450_.jpg" alt="Product 20">
+        <p><b>Ring Indoor Cam (newest model)</b></p>
+        <p>Before tariff: $35</p>
+        <p>After tariff: $50</p>
+      </div>
+      <div class="product" data-name="Blink Mini 2 (Newest Model)">
+        <img src="https://m.media-amazon.com/images/I/51ByylqzxnL._SY300_SX300_.jpg" alt="Product 21">
+        <p><b>Blink Mini 2 (Newest Model)</b></p>
+        <p>Before tariff: $20</p>
+        <p>After tariff: $35</p>
+      </div>
+      <div class="product" data-name="Blink Video Doorbell (newest model) + Sync Module 2">
+        <img src="https://m.media-amazon.com/images/I/41mAlRlMUxL._AC_SY450_.jpg" alt="Product 22">
+        <p><b>Blink Video Doorbell (newest model) + Sync Module 2</b></p>
+        <p>Before tariff: $35</p>
+        <p>After tariff: $50</p>
+      </div>
+      <div class="product" data-name="Ring Battery Doorbell Plus (newest model)">
+        <img src="https://m.media-amazon.com/images/I/61MBp1T6huL._SY450_.jpg" alt="Product 23">
+        <p><b>Ring Battery Doorbell Plus (newest model)</b></p>
+        <p>Before tariff: $100</p>
+        <p>After tariff: $115</p>
+      </div>
+      <div class="product" data-name="WYZE Cam Pan v3 - Indoor/Outdoor Rated">
+        <img src="https://m.media-amazon.com/images/I/51DkvoYXSyL.__AC_SX300_SY300_QL70_FMwebp_.jpg" alt="Product 24">
+        <p><b>WYZE Cam Pan v3 - Indoor/Outdoor Rated</b></p>
+        <p>Before tariff: $30</p>
+        <p>After tariff: $45</p>
+      </div>
+      <div class="product" data-name="Sol de Janeiro Hair & Body Perfume Mist">
+        <img src="https://m.media-amazon.com/images/I/317G-UZ085L._SY445_SX342_QL70_FMwebp_.jpg" alt="Product 25">
+        <p><b>Sol de Janeiro Hair & Body Perfume Mist</b></p>
+        <p>Before tariff: $25</p>
+        <p>After tariff: $40</p>
+      </div>
+      <div class="product" data-name="Victoria's Secret Bare Vanilla Body Mist">
+        <img src="https://m.media-amazon.com/images/I/314o9CFTzXL._SX300_SY300_QL70_FMwebp_.jpg" alt="Product 26">
+        <p><b>Victoria's Secret Bare Vanilla Body Mist</b></p>
+        <p>Before tariff: $22</p>
+        <p>After tariff: $37</p>
+      </div>
+      <div class="product" data-name="OUAI St. Barts Hair and Body Mist">
+        <img src="https://m.media-amazon.com/images/I/31O70vKjfuL._SX300_SY300_QL70_FMwebp_.jpg" alt="Product 27">
+        <p><b>OUAI St. Barts Hair and Body Mist</b></p>
+        <p>Before tariff: $27</p>
+        <p>After tariff: $42</p>
+      </div>
+      <div class="product" data-name="Nautica Voyage Eau de Toilette 3.3 fl oz (Pack of 1)">
+        <img src="https://m.media-amazon.com/images/I/313w0C3jAAL._SX300_SY300_QL70_FMwebp_.jpg" alt="Product 28">
+        <p><b>Nautica Voyage Eau de Toilette 3.3 fl oz (Pack of 1)</b></p>
+        <p>Before tariff: $18</p>
+        <p>After tariff: $33</p>
+      </div>
+      <div class="product" data-name="Swiss Arabian Amaali">
+        <img src="https://m.media-amazon.com/images/I/41JwZgpaYGL._SX300_SY300_QL70_FMwebp_.jpg" alt="Product 29">
+        <p><b>Swiss Arabian Amaali</b></p>
+        <p>Before tariff: $21</p>
+        <p>After tariff: $36</p>
+      </div>
+      <div class="product" data-name="Lattafa Yara - Vanilla, Gourmand, Fruity, Floral">
+        <img src="https://m.media-amazon.com/images/I/21-VSHGKlsL._SX300_SY300_QL70_FMwebp_.jpg" alt="Product 30">
+        <p><b>Lattafa Yara - Vanilla, Gourmand, Fruity, Floral</b></p>
+        <p>Before tariff: $24</p>
+        <p>After tariff: $39</p>
+      </div>
+      <div class="product" data-name="Mikego Smart Watch for Men Women">
+        <img src="https://m.media-amazon.com/images/I/71QA9CUvpzL.__AC_SX300_SY300_QL70_FMwebp_.jpg" alt="Product 31">
+        <p><b>Mikego Smart Watch for Men Women</b></p>
+        <p>Before tariff: $75</p>
+        <p>After tariff: $90</p>
+      </div>
+      <div class="product" data-name="TORJALPH Smart Watch for Men Women">
+        <img src="https://m.media-amazon.com/images/I/61Gv3AL8KRL._AC_SX425_.jpg" alt="Product 32">
+        <p><b>TORJALPH Smart Watch for Men Women</b></p>
+        <p>Before tariff: $19</p>
+        <p>After tariff: $34</p>
+      </div>
+      <div class="product" data-name="Casio F91W Series">
+        <img src="https://m.media-amazon.com/images/I/71uUdxh0G+L._AC_UY327_FMwebp_QL65_.jpg" alt="Product 33">
+        <p><b>Casio F91W Series</b></p>
+        <p>Before tariff: $20</p>
+        <p>After tariff: $35</p>
+      </div>
+      <div class="product" data-name="Smart watch with Alexa">
+        <img src="https://m.media-amazon.com/images/I/71aDKOcvDGL._AC_UY327_FMwebp_QL65_.jpg" alt="Product 34">
+        <p><b>Smart watch with Alexa</b></p>
+        <p>Before tariff: $17</p>
+        <p>After tariff: $32</p>
+      </div>
+      <div class="product" data-name="BY BENYAR Mens Watches Analog">
+        <img src="https://m.media-amazon.com/images/I/71tzAgUsDDL._AC_UY327_FMwebp_QL65_.jpg" alt="Product 35">
+        <p><b>BY BENYAR Mens Watches Analog</b></p>
+        <p>Before tariff: $33</p>
+        <p>After tariff: $48</p>
+      </div>
+      <div class="product" data-name="Amazefit Bip 5 smart watch">
+        <img src="https://m.media-amazon.com/images/I/61ueYKWLNqL._AC_UY327_FMwebp_QL65_.jpg" alt="Product 36">
+        <p><b>Amazefit Bip 5 smart watch</b></p>
+        <p>Before tariff: $60</p>
+        <p>After tariff: $75</p>
       </div>
     </div>
+    <button class="checkout-btn">Checkout</button>
   </section>
 
-  <script src="/script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const products = document.querySelectorAll('.product');
+      const checkoutBtn = document.querySelector('.checkout-btn');
+      const selectedProducts = new Set();
+
+      products.forEach(product => {
+        product.addEventListener('click', () => {
+          const productName = product.getAttribute('data-name');
+          if (selectedProducts.has(productName)) {
+            selectedProducts.delete(productName);
+            product.classList.remove('selected');
+          } else {
+            selectedProducts.add(productName);
+            product.classList.add('selected');
+          }
+        });
+      });
+
+      checkoutBtn.addEventListener('click', () => {
+        const popup = document.createElement('div');
+        popup.className = 'popup active';
+        const itemsText = selectedProducts.size > 0
+          ? Array.from(selectedProducts).map(name => `<div>${name}</div>`).join('')
+          : '<div>Empty list</div>';
+        popup.innerHTML = `
+          <div class="popup-content">
+            <h2>Selected Items</h2>
+            <div class="items-container">${itemsText}</div>
+            <div class="buttons">
+              <button id="proceed-btn" class="accept-btn">Proceed</button>
+              <button id="return-btn" class="report-btn">Return Home</button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(popup);
+
+        document.getElementById('proceed-btn').addEventListener('click', () => {
+          window.location.href = '/thank-you';
+        });
+
+        document.getElementById('return-btn').addEventListener('click', () => {
+          window.location.href = '/home';
+        });
+      });
+    });
+  </script>
 </body>
 </html>

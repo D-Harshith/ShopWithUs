@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,6 +22,13 @@
     <h1>Opt Out My Data From Training LLM</h1>
     <div class="llm-info-box">
       <p>We use your data to train large language models (LLMs) to improve our services. If you opt out, your data will not be used for LLM training, which may limit personalized recommendations and other AI-driven features.</p>
+      <div class="toggle-label">
+        <span>Toggle Response</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggle-response">
+          <span class="slider"></span>
+        </label>
+      </div>
     </div>
     <div class="llm-buttons">
       <button id="ok-btn" class="accept-btn">OK</button>
@@ -31,5 +37,5 @@
   </section>
 
   <script src="/script.js"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'930d67061f1531b6',t:'MTc0NDc0MDY1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

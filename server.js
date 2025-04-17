@@ -3,7 +3,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const { MongoClient } = require('mongodb');
 const { v4: uuidv4 } = require('uuid');
-const path = require('path'); // Added path module
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -11,7 +11,7 @@ const port = 3000;
 
 // MongoDB connection URI from environment variable
 const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri); // Removed deprecated options
+const client = new MongoClient(uri);
 
 let db;
 
@@ -20,7 +20,7 @@ async function connectToMongoDB() {
   try {
     await client.connect();
     console.log('Connected to MongoDB Atlas');
-    db = client.db('shopwithus'); // Database name (adjust if different)
+    db = client.db('shopwithus');
   } catch (err) {
     console.error('Failed to connect to MongoDB Atlas:', err);
     process.exit(1);
@@ -56,7 +56,8 @@ app.post('/login', async (req, res) => {
         prolificId: normalizedProlificId,
         cookieResponse: null,
         reportText: null,
-        llmConsent: true, // Default LLM consent to true
+        llmConsent: true,
+        toggleResponse: false, // Default toggleResponse to false
         timestamp: new Date().toISOString(),
       };
       await usersCollection.insertOne(user);
@@ -70,7 +71,7 @@ app.post('/login', async (req, res) => {
     );
 
     res.cookie('sessionId', sessionId, { httpOnly: true, sameSite: 'strict' });
-    console.log(`Login successful - Prolific ID: ${normalizedProlificId}, Session ID set: ${sessionId}`);
+    console.log(`Login successful - Prolific ID: ${normalizedProlificId}, Session ID set:('${sessionId}`);
     res.json({ message: 'Login successful' });
   } catch (err) {
     console.error('Error during login:', err.message);
@@ -169,9 +170,9 @@ app.post('/save-consent', async (req, res) => {
 });
 
 app.post('/save-llm-consent', async (req, res) => {
-  const { prolificId, useData } = req.body;
+  const { prolificId, useData, toggleResponse } = req.body;
   const normalizedProlificId = prolificId.trim();
-  console.log(`POST /save-llm-consent - Prolific ID: ${prolificId}, Normalized Prolific ID: ${normalizedProlificId}, UseData: ${useData}`);
+  console.log(`POST /save-llm-consent - Prolific ID: ${prolificId}, Normalized Prolific ID: ${normalizedProlificId}, UseData: ${useData}, ToggleResponse: ${toggleResponse}`);
 
   try {
     const usersCollection = db.collection('users');
@@ -184,10 +185,10 @@ app.post('/save-llm-consent', async (req, res) => {
 
     await usersCollection.updateOne(
       { prolificId: normalizedProlificId },
-      { $set: { llmConsent: useData, timestamp: new Date().toISOString() } }
+      { $set: { llmConsent: useData, toggleResponse: toggleResponse, timestamp: new Date().toISOString() } }
     );
 
-    console.log(`LLM consent saved for Prolific ID ${normalizedProlificId}: ${useData}`);
+    console.log(`LLM consent saved for Prolific ID ${normalizedProlificId}: useData=${useData}, toggleResponse=${toggleResponse}`);
     res.json({ message: 'LLM consent saved' });
   } catch (err) {
     console.error('Error saving LLM consent:', err.message);
@@ -213,8 +214,8 @@ app.get('/get-llm-consent', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    console.log(`LLM consent for Prolific ID ${user.prolificId}: ${user.llmConsent}`);
-    res.json({ useData: user.llmConsent });
+    console.log(`LLM consent for Prolific ID ${user.prolificId}: useData=${user.llmConsent}, toggleResponse=${user.toggleResponse}`);
+    res.json({ useData: user.llmConsent, toggleResponse: user.toggleResponse });
   } catch (err) {
     console.error('Error fetching LLM consent:', err.message);
     res.status(500).json({ error: 'Internal server error' });
