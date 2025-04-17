@@ -66,38 +66,38 @@
     <p>Explore our products and start shopping!</p>
     <div class="products">
       <div class="product" data-name="Gaming chair">
-        <img src="https://images-na.ssl-images-amazon.com/images/G/01/DiscoTec/2025/Vionic/amazon_HP_desktop_QuadCard_Vionic_186x116_2_1x._SY116_CB546706743_.jpg" alt="Product 1">
-        <p><b>Gaming chair</b></p>
+        <img src="https://m.media-amazon.com/images/I/71NifYzyNLL._AC_UL480_FMwebp_QL65_.jpg" alt="Product 1">
+        <p><b>Vans Men's shoes</b></p>
         <p>Before tariff: $75</p>
         <p>After tariff: $90</p>
       </div>
       <div class="product" data-name="Electric scooter">
-        <img src="https://images-na.ssl-images-amazon.com/images/G/01/DiscoTec/2025/Vionic/amazon_HP_desktop_QuadCard_Vionic_186x116_1_1x._SY116_CB546706743_.jpg" alt="Product 2">
-        <p><b>Electric scooter</b></p>
+        <img src="https://m.media-amazon.com/images/I/612veABHruL._AC_UL480_FMwebp_QL65_.jpg" alt="Product 2">
+        <p><b>Columbia Men's Fairbanks Low Shoe</b></p>
         <p>Before tariff: $175</p>
         <p>After tariff: $190</p>
       </div>
       <div class="product" data-name="Drone">
-        <img src="https://images-na.ssl-images-amazon.com/images/G/01/DiscoTec/2025/Vionic/amazon_HP_desktop_QuadCard_Vionic_186x116_3_1x._SY116_CB546706743_.jpg" alt="Product 3">
-        <p><b>Drone</b></p>
+        <img src="https://m.media-amazon.com/images/I/518aDXm1ByL._AC_SX679_.jpg" alt="Product 3">
+        <p><b>Columbia Men's Redmond Iii Waterproof</b></p>
         <p>Before tariff: $175</p>
         <p>After tariff: $190</p>
       </div>
       <div class="product" data-name="Casual shoe">
-        <img src="https://images-na.ssl-images-amazon.com/images/G/01/DiscoTec/2025/Vionic/amazon_HP_desktop_QuadCard_Vionic_186x116_4_1x._SY116_CB546706743_.jpg" alt="Product 4">
-        <p><b>Casual shoe</b></p>
+        <img src="https://m.media-amazon.com/images/I/51QbiMp2w4L._AC_UL480_FMwebp_QL65_.jpg" alt="Product 4">
+        <p><b>Under Armour Men's sport shoes</b></p>
         <p>Before tariff: $60</p>
         <p>After tariff: $75</p>
       </div>
       <div class="product" data-name="Drone">
-        <img src="https://images-na.ssl-images-amazon.com/images/G/01/DiscoTec/2025/Vionic/amazon_HP_desktop_QuadCard_Vionic_186x116_3_1x._SY116_CB546706743_.jpg" alt="Product 5">
-        <p><b>Drone</b></p>
+        <img src="https://m.media-amazon.com/images/I/71PhGB4rwYL._AC_UL480_FMwebp_QL65_.jpg" alt="Product 5">
+        <p><b>Men's sneakers</b></p>
         <p>Before tariff: $175</p>
         <p>After tariff: $190</p>
       </div>
       <div class="product" data-name="Casual shoe">
-        <img src="https://images-na.ssl-images-amazon.com/images/G/01/DiscoTec/2025/Vionic/amazon_HP_desktop_QuadCard_Vionic_186x116_4_1x._SY116_CB546706743_.jpg" alt="Product 6">
-        <p><b>Casual shoe</b></p>
+        <img src="https://m.media-amazon.com/images/I/71aAAgENA0L._AC_UL480_FMwebp_QL65_.jpg" alt="Product 6">
+        <p><b>Unisex adult court shoe</b></p>
         <p>Before tariff: $60</p>
         <p>After tariff: $75</p>
       </div>
@@ -285,52 +285,6 @@
     <button class="checkout-btn">Checkout</button>
   </section>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const products = document.querySelectorAll('.product');
-      const checkoutBtn = document.querySelector('.checkout-btn');
-      const selectedProducts = new Set();
-
-      products.forEach(product => {
-        product.addEventListener('click', () => {
-          const productName = product.getAttribute('data-name');
-          if (selectedProducts.has(productName)) {
-            selectedProducts.delete(productName);
-            product.classList.remove('selected');
-          } else {
-            selectedProducts.add(productName);
-            product.classList.add('selected');
-          }
-        });
-      });
-
-      checkoutBtn.addEventListener('click', () => {
-        const popup = document.createElement('div');
-        popup.className = 'popup active';
-        const itemsText = selectedProducts.size > 0
-          ? Array.from(selectedProducts).map(name => `<div>${name}</div>`).join('')
-          : '<div>Empty list</div>';
-        popup.innerHTML = `
-          <div class="popup-content">
-            <h2>Selected Items</h2>
-            <div class="items-container">${itemsText}</div>
-            <div class="buttons">
-              <button id="proceed-btn" class="accept-btn">Proceed</button>
-              <button id="return-btn" class="report-btn">Return Home</button>
-            </div>
-          </div>
-        `;
-        document.body.appendChild(popup);
-
-        document.getElementById('proceed-btn').addEventListener('click', () => {
-          window.location.href = '/thank-you';
-        });
-
-        document.getElementById('return-btn').addEventListener('click', () => {
-          window.location.href = '/home';
-        });
-      });
-    });
-  </script>
+  <script src="/script.js"></script>
 </body>
 </html>
