@@ -1,4 +1,3 @@
-// File: ShopWithUs/server.js
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const { MongoClient } = require('mongodb');
@@ -218,6 +217,44 @@ app.get('/get-llm-consent', async (req, res) => {
     res.json({ useData: user.llmConsent, toggleResponse: user.toggleResponse });
   } catch (err) {
     console.error('Error fetching LLM consent:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// New endpoint to save LLM report
+app.post('/save-llm-report', async (req, res) => {
+  const { prolificId, reportText } = req.body;
+  const normalizedProlificId = prolificId.trim();
+  console.log(`POST /save-llm-report - Prolific ID: ${prolificId}, Normalized Prolific ID: ${normalizedProlificId}, ReportText: ${reportText}`);
+
+  if (!normalizedProlificId || !reportText) {
+    console.error('Missing prolificId or reportText in /save-llm-report request');
+    return res.status(400).json({ error: 'Prolific ID and reportText are required' });
+  }
+
+  if (normalizedProlificId === 'unknown') {
+    console.error('Received "unknown" prolificId, rejecting request');
+    return res.status(400).json({ error: 'Invalid prolificId: "unknown" is not allowed' });
+  }
+
+  try {
+    const usersCollection = db.collection('users');
+    const user = await usersCollection.findOne({ prolificId: normalizedProlificId });
+
+    if (!user) {
+      console.error(`User not found for Prolific ID: ${normalizedProlificId}`);
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    console.log('User before update:', JSON.stringify(user));
+    await usersCollection.updateOne(
+      { prolificId: normalizedProlificId },
+      { $set: { reportLLMText: reportText, timestamp: new Date().toISOString() } }
+    );
+    console.log(`LLM report saved for Prolific ID ${normalizedProlificId}: ${reportText}`);
+    res.json({ message: 'LLM report saved' });
+  } catch (err) {
+    console.error('Error saving LLM report:', err.message);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

@@ -1,35 +1,136 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Personalization Settings - ShopWithUs</title>
+  <title>Personalization Settings</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    header .logo span {
+      color: #ff9900;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 16px;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .personalization-info {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .personalization-info h2 {
+      margin-top: 0;
+      font-size: 28px;
+    }
+    .personalization-info p {
+      color: #666;
+    }
+    .options {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .option-card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 48%;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .option-card.clickable {
+      cursor: pointer;
+    }
+    .option-card.clickable:hover {
+      transform: translateY(-5px);
+    }
+    .option-card .icon {
+      background-color: #ffebcd;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .option-card .icon i {
+      color: #ff9900;
+      font-size: 30px;
+    }
+    .option-card h3 {
+      margin: 10px 0;
+      font-size: 20px;
+    }
+    .option-card p {
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <div class="logo"><a href="/">ShopWithUs</a></div>
-    <nav>
-      <ul>
-        <li><a href="/home">Home</a></li>
-        <li><a href="/account-settings">Account</a></li>
-        <li><a href="/logout">Logout</a></li>
-      </ul>
-    </nav>
+    <div class="logo">ShopWith<span>Us</span></div>
+    <!-- <nav>
+      <a href="/home">Home</a>
+      <a href="/account-settings">Account</a>
+      <a href="/">Logout</a>
+    </nav> -->
   </header>
-
-  <section>
-    <h1>Personalization Settings</h1>
-    <div class="personalization-info-box">
-      <p><strong>Personalization:</strong> Tailor your shopping experience by managing your preferences. Control how we use your data to provide personalized recommendations and improve your interaction with ShopWithUs.</p>
+  <main>
+    <div class="personalization-info">
+      <h2>Personalization Settings</h2>
+      <p>Optimize your customer experience through our personalization settings. Control how we use your data to provide personalized recommendations and improve your experience with ShopWithUs chatbot.</p>
     </div>
-    <div class="personalization-links">
-      <a href="/llm-consent" class="btn-primary">My Data</a>
+    <div class="options">
+      <div class="option-card">
+        <div class="icon">
+          <i class="fas fa-user"></i>
+        </div>
+        <h3>Your Account</h3>
+        <p>Account details, preferences, and settings</p>
+      </div>
+      <div class="option-card clickable" onclick="window.location.href='/llm-consent'">
+        <div class="icon">
+          <i class="fas fa-network-wired"></i>
+        </div>
+        <h3>Training data</h3>
+        <p>Manage how your data is used to train large language models</p>
+      </div>
     </div>
-    <p><a href="/account-settings">Back to Account Settings</a></p>
-  </section>
-
+  </main>
   <script src="/script.js"></script>
 </body>
 </html>

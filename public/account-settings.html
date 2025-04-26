@@ -1,34 +1,135 @@
-<!-- File: ShopWithUs/public/account-settings.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account Settings - ShopWithUs</title>
+  <title>Your Account</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    header .logo span {
+      color: #ff9900;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 16px;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .account-info {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .account-info h2 {
+      margin-top: 0;
+      font-size: 28px;
+    }
+    .account-info p {
+      color: #666;
+    }
+    .options {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .option-card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 48%;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .option-card.clickable {
+      cursor: pointer;
+    }
+    .option-card.clickable:hover {
+      transform: translateY(-5px);
+    }
+    .option-card .icon {
+      background-color: #ffebcd;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .option-card .icon i {
+      color: #ff9900;
+      font-size: 30px;
+    }
+    .option-card h3 {
+      margin: 10px 0;
+      font-size: 20px;
+    }
+    .option-card p {
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <div class="logo"><a href="/">ShopWithUs</a></div>
-    <nav>
-      <ul>
-        <li><a href="/home">Home</a></li>
-        <li><a href="/account-settings">Account</a></li>
-        <li><a href="/logout">Logout</a></li>
-      </ul>
-    </nav>
+    <div class="logo">ShopWith<span>Us</span></div>
+    <!-- <nav>
+      <a href="/home">Home</a>
+      <a href="/account-settings">Your Account</a>
+      <a href="/">Logout</a>
+    </nav> -->
   </header>
   <main>
-    <h1>Account Settings</h1>
-    <div class="account-info-box">
-      <p><strong>Prolific ID:</strong> <span id="user-name">Loading...</span></p>
-      <p>Manage your account details and preferences to customize your shopping experience.</p>
+    <div class="account-info">
+      <h2>Your Account</h2>
+      <p>Prolific ID: <span id="user-name">Loading...</span></p>
+      <p>Manage your account, personalized recommendations, and training data preferences to optimize your customer experience.</p>
     </div>
-    <div class="account-links">
-      <a href="/personalization" class="btn-primary">Personalization</a>
-    </div>
-    <div class="account-links">
-      <p><a href="/home">Back to Home</a></p>
+    <div class="options">
+      <div class="option-card clickable" onclick="window.location.href='/personalization'">
+        <div class="icon">
+          <i class="fas fa-user-cog"></i>
+        </div>
+        <h3>Personalization</h3>
+        <p>Manage use of data and personalized recommendations</p>
+      </div>
+      <div class="option-card">
+        <div class="icon">
+          <i class="fas fa-network-wired"></i>
+        </div>
+        <h3>Training data</h3>
+        <p>Manage how your data is used to train large language models</p>
+      </div>
     </div>
   </main>
   <script src="/script.js"></script>

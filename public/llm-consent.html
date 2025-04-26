@@ -3,39 +3,198 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LLM Settings - ShopWithUs</title>
+  <title>Training Data</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="/styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    header .logo span {
+      color: #ff9900;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 16px;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .training-info {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .training-info h2 {
+      margin-top: 0;
+      font-size: 28px;
+    }
+    .training-info p, .training-info ul {
+      color: #666;
+      line-height: 1.6;
+    }
+    .training-info ul {
+      padding-left: 20px;
+    }
+    .training-info h3 {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #333;
+    }
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+    }
+    .toggle-container label {
+      margin-right: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 25px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 25px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 19px;
+      width: 19px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #ff9900;
+    }
+    input:checked + .slider:before {
+      transform: translateX(25px);
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .accept-btn {
+      background-color: #ff9900;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .report-btn {
+      background-color: white;
+      color: #ff9900;
+      border: 2px solid #ff9900;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .opt-out-btn {
+      background: none;
+      border: none;
+      color: black; /* Changed to black */
+      font-size: 16px;
+      cursor: default; /* Prevent pointer cursor */
+      text-decoration: none; /* Ensure no underline */
+    }
+    .opt-out-btn:hover {
+      background: none; /* No hover effect */
+      border: none;
+      cursor: default; /* Ensure no cursor change on hover */
+      text-decoration: none; /* No underline on hover */
+    }
+  </style>
 </head>
 <body>
   <header>
-    <div class="logo"><a href="/">ShopWithUs</a></div>
-    <nav>
-      <ul>
-        <li><a href="/home">Home</a></li>
-        <li><a href="/account-settings">Account</a></li>
-        <li><a href="/logout">Logout</a></li>
-      </ul>
-    </nav>
+    <div class="logo">ShopWith<span>Us</span></div>
+    <!-- <nav>
+      <a href="/home">Home</a>
+      <a href="/account-settings">Account</a>
+      <a href="/">Logout</a>
+    </nav> -->
   </header>
-
-  <section>
-    <h1>Opt Out My Data From Training LLM</h1>
-    <div class="llm-info-box">
-      <p>We use your data to train large language models (LLMs) to improve our services. If you opt out, your data will not be used for LLM training, which may limit personalized recommendations and other AI-driven features.</p>
-      <div class="toggle-label">
-        <span>Toggle Response</span>
+  <main>
+    <div class="training-info">
+      <h2>Do Not Use My Personal Information As Training Data</h2>
+      <p>The California Consumer Privacy Act (CCPA) grants residents the right to opt out of the use of their personal information as training data for large language models (LLMs). Under the CCPA, training can mean the use of your personal information as input into statistical models that predict output that can enhance your customer experience.</p>
+      <ul>
+        <li>If you browse on ShopWithUs, we may be using cookies and similar tracking technologies (we refer collectively as 'cookies') that involve the use of your personal information as training data.</li>
+        <li>If you interact with ShopWithUs in other ways, such as signing up for an account, we may use your personal information in other ways, such as sharing your information with third parties for their training data purposes.</li>
+        <li>To opt out of the use of personal information as training data on this site, please click the button below. If you want to opt out on a different device or browser-specific, you will need to opt out again from each device or browser, or clear your cookies.</li>
+      </ul>
+      <h3>Why We Use Your Data</h3>
+      <p>We use your data to train large language models (LLMs) to improve your customer experience. If you opt out, your data will not be used as training data, which may limit personalized recommendations and other AI-based enhanced experiences.</p>
+      <h3>Use My Personal Information This Site As Training Data</h3>
+      <div class="toggle-container">
+        <label for="toggle-response">Allow training data usage:</label>
         <label class="toggle-switch">
-          <input type="checkbox" id="toggle-response">
+          <input type="checkbox" id="toggle-response" checked>
           <span class="slider"></span>
         </label>
       </div>
+      <div class="buttons">
+        <button id="ok-btn" class="accept-btn">Confirm My Choices</button>
+        <button id="report-btn" class="report-btn">Report</button>
+        <button id="opt-out-btn" class="opt-out-btn">Opt Out</button>
+      </div>
+      <div id="reportBox" style="display: none; margin-top: 20px;">
+        <textarea id="reportText" placeholder="We value your feedback. Please let us know how we can improve your experience" style="width: 100%; height: 100px; padding: 10px; font-size: 14px;"></textarea>
+        <div class="buttons" style="margin-top: 10px;">
+          <button id="back-btn" class="accept-btn">Back</button>
+          <button id="submit-report" class="report-btn">Report</button>
+        </div>
+      </div>
     </div>
-    <div class="llm-buttons">
-      <button id="ok-btn" class="accept-btn">OK</button>
-      <button id="opt-out-btn" class="opt-out-btn">Opt Out</button>
-    </div>
-  </section>
-
+  </main>
   <script src="/script.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'930d67061f1531b6',t:'MTc0NDc0MDY1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
