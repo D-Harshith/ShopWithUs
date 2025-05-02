@@ -16,7 +16,7 @@ header {
   padding: 10px 20px;
 }
 
-header .logo a {
+header .logo {
   font-size: 24px;
   font-weight: bold;
   text-decoration: none;
@@ -132,7 +132,7 @@ form input[disabled] {
   background-color: #ffffff;
   padding: 20px;
   border-radius: 4px;
-  text-align: center;
+  text-align: left;
   width: 400px;
   border: 1px solid #d3d3d3;
 }
@@ -164,11 +164,10 @@ form input[disabled] {
 .report-btn {
   padding: 10px 20px;
   background: none;
-  color: #0066c0;
-  border: none;
+  color: #ff9900;
+  border: 2px solid #ff9900;
   cursor: pointer;
   font-size: 16px;
-  text-decoration: underline;
 }
 
 #user-info {

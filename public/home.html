@@ -29,7 +29,7 @@
       margin-top: 20px;
       text-align: center;
     }
-    .checkout-btn, .not-interested-btn {
+    .checkout-btn {
       padding: 10px 20px;
       background-color: #ff9900;
       color: white;
@@ -40,7 +40,18 @@
       margin: 0 10px;
       display: inline-block;
     }
-    .checkout-btn:hover, .not-interested-btn:hover {
+    .not-interested-btn {
+  padding: 10px 20px;
+  background-color: white;
+  color: #ff9900;
+  border: 2px solid #ff9900;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 10px;
+  display: inline-block;
+}
+    .checkout-btn:hover {
       background-color: #e68a00;
     }
     .items-container {
@@ -54,7 +65,9 @@
 </head>
 <body>
   <header>
-    <div class="logo"><a href="/">ShopWithUs</a></div>
+    <div class="logo">
+      <span style="color: white;">ShopWith</span><span style="color: #ff9900;">Us</span>
+    </div>
   </header>
 
   <section>

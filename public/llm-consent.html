@@ -9,6 +9,7 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      font-size: 16px;
       margin: 0;
       padding: 0;
       background-color: #f4f4f4;
@@ -22,7 +23,6 @@
       align-items: center;
     }
     header .logo {
-      font-size: 24px;
       font-weight: bold;
     }
     header .logo span {
@@ -32,7 +32,6 @@
       color: white;
       text-decoration: none;
       margin-left: 20px;
-      font-size: 16px;
     }
     nav a:hover {
       text-decoration: underline;
@@ -50,7 +49,7 @@
     }
     .training-info h2 {
       margin-top: 0;
-      font-size: 28px;
+      text-transform: uppercase;
     }
     .training-info p, .training-info ul {
       color: #666;
@@ -61,18 +60,17 @@
     }
     .training-info h3 {
       margin-top: 20px;
-      font-size: 20px;
       color: #333;
+    }
+    .training-info .highlight {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #e6e6e6;
+      padding: 0 2px;
     }
     .toggle-container {
       display: flex;
       align-items: center;
       margin: 20px 0;
-    }
-    .toggle-container label {
-      margin-right: 10px;
-      font-size: 16px;
-      color: #333;
     }
     .toggle-switch {
       position: relative;
@@ -126,71 +124,89 @@
       padding: 10px 20px;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 16px;
     }
-    .report-btn {
-      background-color: white;
+    .llm-report-btn {
+      padding: 10px 20px;
+      background: none;
       color: #ff9900;
       border: 2px solid #ff9900;
-      padding: 10px 20px;
-      border-radius: 4px;
       cursor: pointer;
       font-size: 16px;
+      border-radius: 4px;
     }
     .opt-out-btn {
       background: none;
       border: none;
-      color: black; /* Changed to black */
-      font-size: 16px;
-      cursor: default; /* Prevent pointer cursor */
-      text-decoration: none; /* Ensure no underline */
+      color: black;
+      cursor: default;
+      text-decoration: none;
     }
     .opt-out-btn:hover {
-      background: none; /* No hover effect */
+      background: none;
       border: none;
-      cursor: default; /* Ensure no cursor change on hover */
-      text-decoration: none; /* No underline on hover */
+      cursor: default;
+      text-decoration: none;
+    }
+    textarea {
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      width: 75%;
+      min-height: 100px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+    }
+    textarea::placeholder {
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      color: #666;
+    }
+    .back-btn {
+      background-color: #ff9900;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">ShopWith<span>Us</span></div>
-    <!-- <nav>
-      <a href="/home">Home</a>
-      <a href="/account-settings">Account</a>
-      <a href="/">Logout</a>
-    </nav> -->
+    <div class="logo">
+      <span style="color: white;">ShopWith</span><span style="color: #ff9900;">Us</span>
+    </div>
   </header>
   <main>
     <div class="training-info">
       <h2>Do Not Use My Personal Information As Training Data</h2>
-      <p>The California Consumer Privacy Act (CCPA) grants residents the right to opt out of the use of their personal information as training data for large language models (LLMs). Under the CCPA, training can mean the use of your personal information as input into statistical models that predict output that can enhance your customer experience.</p>
+      <p>The California Consumer Privacy Act (CCPA) grants residents the right to opt out of the use of their personal information as training data for large language models (LLMs). Under the CCPA, training data can mean the use of your personal information as input into statistical models that predict personalized output that can enhance your customer experience.</p>
       <ul>
-        <li>If you browse on ShopWithUs, we may be using cookies and similar tracking technologies (we refer collectively as 'cookies') that involve the use of your personal information as training data.</li>
-        <li>If you interact with ShopWithUs in other ways, such as signing up for an account, we may use your personal information in other ways, such as sharing your information with third parties for their training data purposes.</li>
-        <li>To opt out of the use of personal information as training data on this site, please click the button below. If you want to opt out on a different device or browser-specific, you will need to opt out again from each device or browser, or clear your cookies.</li>
+        <li><b>If you browse on ShopWithUs</b>, we may be using cookies and similar tracking technologies (we refer to these collectively as "cookies") that involve the use of your personal information as training data.</li>
+        <li><b>If you interact with ShopWithUs in other ways</b>, such as signing up for an account, we may use your personal information in other ways, such as sharing your information with third parties for their training data purposes.</li>
+        <li><b>To opt out of the use of personal information as training data on this site</b>, please click "Opt Out." This opt out function is browser and device-specific. Therefore, if you visit this site again from a different browser or device, or clear your cookies, you will need to opt out of training data through cookies again.</li>
       </ul>
-      <h3>Why We Use Your Data</h3>
+      <h3><u>Why Training Data Matters</u></h3>
       <p>We use your data to train large language models (LLMs) to improve your customer experience. If you opt out, your data will not be used as training data, which may limit personalized recommendations and other AI-based enhanced experiences.</p>
-      <h3>Use My Personal Information This Site As Training Data</h3>
       <div class="toggle-container">
-        <label for="toggle-response">Allow training data usage:</label>
+        <span><b>Use My Personal Information On This Site As Training Data:</b></span> 
         <label class="toggle-switch">
           <input type="checkbox" id="toggle-response" checked>
           <span class="slider"></span>
         </label>
       </div>
+      <p>Even after opting out, you may continue to see personalized recommendations that may include interest-based information about your visit and information from third parties. Please remember that this opt out is browser and device-specific. If you visit this site from a different browser or device, or clear your cookies, you must formally opt out again.</p>
       <div class="buttons">
         <button id="ok-btn" class="accept-btn">Confirm My Choices</button>
-        <button id="report-btn" class="report-btn">Report</button>
+        <button id="report-btn" class="llm-report-btn">Report</button>
         <button id="opt-out-btn" class="opt-out-btn">Opt Out</button>
       </div>
       <div id="reportBox" style="display: none; margin-top: 20px;">
-        <textarea id="reportText" placeholder="We value your feedback. Please let us know how we can improve your experience" style="width: 100%; height: 100px; padding: 10px; font-size: 14px;"></textarea>
-        <div class="buttons" style="margin-top: 10px;">
-          <button id="back-btn" class="accept-btn">Back</button>
-          <button id="submit-report" class="report-btn">Report</button>
+        <textarea id="reportText" placeholder="We value your feedback. Please let us know how we can improve your experience"></textarea>
+        <div class="buttons" style="margin-top: 10px; text-align: center;">
+          <button id="back-btn" class="back-btn">Back</button>
+          <button id="submit-report" class="llm-report-btn">Report</button>
         </div>
       </div>
     </div>
