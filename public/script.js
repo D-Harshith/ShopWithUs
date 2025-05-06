@@ -23,6 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Initializing account settings hover effects');
     initializeAccountSettingsHover();
   }
+
+  // Disable browser back button
+  history.pushState(null, null, window.location.pathname);
+  window.onpopstate = function(event) {
+    history.pushState(null, null, window.location.pathname);
+  };
 });
 
 function logActionTime(action) {
@@ -87,7 +93,7 @@ function initializeShopping() {
     document.getElementById('proceed-btn').addEventListener('click', () => {
       logActionTime('Proceed');
       console.log('Navigating to thank-you page');
-      window.location.href = '/thank-you';
+      window.location.href = '/thank Kodi-you';
     });
 
     document.getElementById('return-btn').addEventListener('click', () => {
@@ -122,7 +128,6 @@ function applyHoverEffect(element, borderColor, logPrefix) {
 function initializePersonalizationHover() {
   console.log('Setting up hover effects for personalization page');
 
-  // Target all elements with class "option-card clickable"
   const optionCards = document.querySelectorAll('.option-card.clickable');
 
   if (optionCards.length > 0) {
@@ -140,7 +145,6 @@ function initializePersonalizationHover() {
     console.warn('No elements with class "option-card clickable" found on the personalization page');
   }
 
-  // Restore original hover effect for training-data
   const trainingData = document.querySelector('.training-data');
   if (trainingData) {
     console.log('Training data element found:', {
@@ -159,7 +163,6 @@ function initializePersonalizationHover() {
     });
   } else {
     console.warn('Training data element not found on personalization page');
-    // Log all divs to help identify the correct class
     const allDivs = document.querySelectorAll('div');
     console.log('All div elements on the personalization page:', Array.from(allDivs).map(div => ({
       class: div.className,
@@ -168,7 +171,6 @@ function initializePersonalizationHover() {
     })));
   }
 
-  // Watch for dynamically added option-card clickable elements
   const optionCardObserver = new MutationObserver((mutations) => {
     mutations.forEach(mutation => {
       if (mutation.addedNodes.length) {
@@ -177,7 +179,7 @@ function initializePersonalizationHover() {
           console.log(`Found ${newOptionCards.length} new option-card elements via MutationObserver`);
           newOptionCards.forEach((card, index) => {
             if (!card.dataset.hoverApplied) {
-              applyHoverEffect(card, 'black', `option-card ${index + 1}`);
+              applyHoverEffect(card, 'black', `option unveils-card ${index + 1}`);
               card.dataset.hoverApplied = 'true';
             }
           });
@@ -195,7 +197,6 @@ function initializePersonalizationHover() {
 function initializeAccountSettingsHover() {
   console.log('Setting up hover effects for account settings page');
 
-  // Target the "Personalization" card (element with class "option-card clickable")
   const personalizationCards = document.querySelectorAll('.option-card.clickable');
 
   if (personalizationCards.length > 0) {
@@ -207,14 +208,12 @@ function initializeAccountSettingsHover() {
         id: card.id,
         text: card.textContent.trim()
       });
-      // Apply to the card with "Personalization" text
       if (card.textContent.trim().includes('Personalization')) {
         applyHoverEffect(card, 'black', `personalization card ${index + 1}`);
       }
     });
   } else {
     console.warn('No elements with class "option-card clickable" found on the account settings page');
-    // Log all divs to help identify the correct class
     const allDivs = document.querySelectorAll('div');
     console.log('All div elements on the page:', Array.from(allDivs).map(div => ({
       class: div.className,
@@ -223,7 +222,6 @@ function initializeAccountSettingsHover() {
     })));
   }
 
-  // Watch for dynamically added elements
   const observer = new MutationObserver((mutations) => {
     mutations.forEach(mutation => {
       if (mutation.addedNodes.length) {
@@ -295,13 +293,13 @@ function checkAndShowPopups(attempt = 1, maxAttempts = 5) {
               })
               .then(llmData => {
                 console.log('LLM consent data:', llmData);
-                if (llmData.useData !== undefined && llmData.toggleResponse === true) {
-                  console.log('LLM consent already given with toggle interaction, skipping');
-                } else {
+                if (llmData.toggleResponse === undefined || llmData.toggleResponse === null) {
                   setTimeout(() => {
                     console.log('Showing LLM popup');
                     showLLMWarning(prolificId);
                   }, 1000);
+                } else {
+                  console.log('LLM consent decision already made, skipping popup');
                 }
               })
               .catch(err => {
@@ -435,7 +433,10 @@ function saveConsent(prolificId, response, reportText = null) {
         
         setTimeout(() => {
           thankYouPopup.remove();
-          window.location.href = '/home';
+          setTimeout(() => {
+            console.log('Showing LLM warning after report');
+            showLLMWarning(prolificId);
+          }, 1000);
         }, 3000);
       } else {
         setTimeout(() => {
@@ -458,7 +459,7 @@ function showLLMWarning(prolificId) {
   warning.innerHTML = `
     <div class="popup-content">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-      <h2>LLM Optimizing Techniques for On-Device Deployment</h2>
+      <h2 style="text-align: center;">LLM Optimizing Techniques for On-Device Deployment</h2>
       <div style="display: flex; flex-wrap: wrap; justify-content: space-around; margin-top: 20px;">
         <div style="width: 45%; margin-bottom: 20px; text-align: center;">
           <div style="background-color: #ff9900; border-radius: 50%; width: 60px; height: 60px; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
@@ -502,9 +503,9 @@ function showLLMWarning(prolificId) {
   });
 }
 
-function saveLLMConsent(prolificId, useData, toggleResponse) {
-  console.log(`Saving LLM consent for ID ${prolificId}: useData=${useData}, toggle=${toggleResponse}`);
-  fetch('/save-llm-consent', {
+function saveLLMConsent(prolificId, useData, toggleResponse, redirect = true) {
+  console.log(`Saving LLM consent for ID ${prolificId}: useData=${useData}, toggle=${toggleResponse}, redirect=${redirect}`);
+  return fetch('/save-llm-consent', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prolificId, useData, toggleResponse }),
@@ -516,11 +517,17 @@ function saveLLMConsent(prolificId, useData, toggleResponse) {
         throw new Error(`Failed to save LLM consent: ${res.status}`);
       }
       console.log('LLM consent saved');
-      window.location.href = '/home';
+      if (redirect) {
+        window.location.href = '/home';
+      }
+      return res.json();
     })
     .catch(err => {
       console.error('Save LLM consent error:', err.message);
-      window.location.href = '/home';
+      if (redirect) {
+        window.location.href = '/home';
+      }
+      throw err;
     });
 }
 
@@ -560,11 +567,10 @@ function saveLLMReport(prolificId, reportText, toggleResponse) {
         throw new Error(`Failed to save LLM consent after report: ${res.status}`);
       }
       console.log('LLM consent saved after report');
-      // Do not redirect here; let the caller handle the next steps
     })
     .catch(err => {
       console.error('Save LLM report or consent error:', err.message);
-      throw err; // Let the caller handle the error
+      throw err;
     });
 }
 
@@ -625,7 +631,7 @@ function loadLLMConsent() {
           if (toggleSwitch) {
             toggleSwitch.checked = true;
             toggleSwitch.disabled = true;
-            console.log('Toggle set to true and disabled');
+            console.log('Toggle set to', toggleSwitch.checked, 'and disabled');
           } else {
             console.warn('Toggle switch element not found');
           }
@@ -635,8 +641,10 @@ function loadLLMConsent() {
       const okBtn = document.getElementById('ok-btn');
       if (okBtn) {
         okBtn.addEventListener('click', () => {
-          console.log('OK button clicked, toggleResponse: true');
-          saveLLMConsent(prolificId, true, true);
+          const toggleSwitch = document.getElementById('toggle-response');
+          const useData = toggleSwitch ? toggleSwitch.checked : true;
+          console.log('OK button clicked, toggleResponse:', useData);
+          saveLLMConsent(prolificId, useData, useData);
         });
       } else {
         console.error('OK button not found');
@@ -667,10 +675,9 @@ function loadLLMConsent() {
       });
 
       if (reportBtn && reportBox && backBtn && submitReportBtn && reportTextElement) {
-        reportBtn.style.color = 'black';
+        reportBtn.style.color = '#ff9900';
         reportBtn.style.textDecoration = 'none';
 
-        // Update textarea styles: fixed width, dynamic height, centered
         reportTextElement.style.width = '75%';
         reportTextElement.style.minHeight = '100px';
         reportTextElement.style.resize = 'vertical';
@@ -681,9 +688,9 @@ function loadLLMConsent() {
         reportBox.style.alignItems = 'center';
         reportBox.style.gap = '10px';
 
-        backBtn.style.color = 'black';
+        backBtn.style.color = 'white';
         backBtn.style.textDecoration = 'none';
-        submitReportBtn.style.color = 'black';
+        submitReportBtn.style.color = '#ff9900';
         submitReportBtn.style.textDecoration = 'none';
         submitReportBtn.style.border = '1px solid orange';
 
@@ -691,7 +698,6 @@ function loadLLMConsent() {
           console.log('Showing report box on LLM consent page');
           reportBox.style.display = 'flex';
           reportBtn.style.display = 'none';
-          // Hide "Confirm My Choices" and "Opt Out" buttons
           if (okBtn) okBtn.style.display = 'none';
           if (optOutBtn) optOutBtn.style.display = 'none';
         });
@@ -700,7 +706,6 @@ function loadLLMConsent() {
           console.log('Hiding report box on LLM consent page');
           reportBox.style.display = 'none';
           reportBtn.style.display = 'block';
-          // Restore "Confirm My Choices" and "Opt Out" buttons
           if (okBtn) okBtn.style.display = 'block';
           if (optOutBtn) optOutBtn.style.display = 'block';
         });
@@ -709,16 +714,13 @@ function loadLLMConsent() {
           event.preventDefault();
           console.log('Submit report button clicked');
           reportLLMText = reportTextElement.value.trim();
-          console.log('Toggle state before submitting report: true');
+          console.log('Toggle state before submitting report:', document.getElementById('toggle-response').checked);
           if (!reportLLMText) {
             console.warn('No report text entered');
-            // Still show the thank-you message and proceed even if no text is entered
           }
           
-          // Save the report
           saveLLMReport(prolificId, reportLLMText, true)
             .then(() => {
-              // Show "Thank you for your input" pop-up
               const thankYouPopup = document.createElement('div');
               thankYouPopup.className = 'popup active';
               thankYouPopup.innerHTML = `
@@ -728,19 +730,16 @@ function loadLLMConsent() {
               `;
               document.body.appendChild(thankYouPopup);
 
-              // Close pop-up after 3 seconds and show only "Confirm My Choices" and "Opt Out"
               setTimeout(() => {
                 thankYouPopup.remove();
                 reportBox.style.display = 'none';
-                // Show "Confirm My Choices" and "Opt Out", but not "Report"
                 if (okBtn) okBtn.style.display = 'block';
                 if (optOutBtn) optOutBtn.style.display = 'block';
-                reportBtn.style.display = 'none'; // Keep "Report" hidden
+                reportBtn.style.display = 'none';
               }, 3000);
             })
             .catch(err => {
               console.error('Error during report submission:', err.message);
-              // Still show the thank-you message even if saving fails
               const thankYouPopup = document.createElement('div');
               thankYouPopup.className = 'popup active';
               thankYouPopup.innerHTML = `
@@ -791,21 +790,30 @@ function showOptOutConfirmation(prolificId) {
       <p>If you opt out, personalization and new features may not work well for you.</p>
       <div class="buttons">
         <button id="cancel-opt-out" class="accept-btn">Cancel</button>
-        <button id="confirm-opt-out" class="opt-out-btn">Yes</button>
+        <button id="confirm-opt-out" class="opt-out-btn">Turn Off</button>
       </div>
     </div>
   `;
   document.body.appendChild(confirmationPopup);
 
   document.getElementById('cancel-opt-out').addEventListener('click', () => {
-    console.log('Cancel opt-out clicked, toggleResponse: true');
-    saveLLMConsent(prolificId, true, true);
+    console.log('Cancel opt-out clicked, keeping toggle on');
+    const toggleSwitch = document.getElementById('toggle-response');
+    if (toggleSwitch) {
+      toggleSwitch.checked = true;
+    }
     confirmationPopup.remove();
   });
 
   document.getElementById('confirm-opt-out').addEventListener('click', () => {
-    console.log('Confirm opt-out clicked, toggleResponse: true');
-    saveLLMConsent(prolificId, false, true);
+    console.log('Confirm opt-out clicked, turning toggle off');
+    const toggleSwitch = document.getElementById('toggle-response');
+    if (toggleSwitch) {
+      toggleSwitch.checked = false;
+      saveLLMConsent(prolificId, false, false, false);
+    } else {
+      saveLLMConsent(prolificId, false, false, false);
+    }
     confirmationPopup.remove();
   });
 }
