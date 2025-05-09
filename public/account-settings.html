@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script type="text/javascript">
+    function showAlert() {
+        window.history.forward();
+    }
+    setTimeout("showAlert()", 0);
+    window.onunload = function () { null };
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Your Account</title>
@@ -109,7 +117,7 @@
   <main>
     <div class="account-info">
       <h2>Your Account</h2>
-      <p>Prolific ID: <b><span id="user-name">Loading...</span></p></b>
+      <p>Prolific ID: <b><span id="user-name">Loading...</span></b></p>
       <p>Manage your account, personalized recommendations, and training data preferences to optimize your customer experience.</p>
     </div>
     <div class="options">

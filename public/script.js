@@ -23,18 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Initializing account settings hover effects');
     initializeAccountSettingsHover();
   }
-
-  // Disable browser back button
-  history.pushState(null, null, window.location.pathname);
-  window.onpopstate = function(event) {
-    history.pushState(null, null, window.location.pathname);
-  };
 });
 
 function logActionTime(action) {
   const now = new Date();
   const timeString = now.toISOString();
   console.log(`${action} clicked at: ${timeString}`);
+}
+
+function navigateTo(url) {
+  console.log(`Navigating to ${url} via website navigation`);
+  window.location.href = url;
 }
 
 function initializeShopping() {
@@ -92,12 +91,11 @@ function initializeShopping() {
 
     document.getElementById('proceed-btn').addEventListener('click', () => {
       logActionTime('Proceed');
-      console.log('Navigating to thank-you page');
-      window.location.href = '/thank Kodi-you';
+      navigateTo('/thank-you');
     });
 
     document.getElementById('return-btn').addEventListener('click', () => {
-      console.log('Returning to home page');
+      console.log('Returning to home page via website navigation');
       popup.remove();
     });
   });
@@ -105,8 +103,7 @@ function initializeShopping() {
   if (notInterestedBtn) {
     notInterestedBtn.addEventListener('click', () => {
       logActionTime('Not Interested');
-      console.log('User not interested, navigating to thank-you page');
-      window.location.href = '/thank-you';
+      navigateTo('/thank-you');
     });
   } else {
     console.warn('Not interested button not found on home page');
@@ -349,8 +346,8 @@ function showErrorMessage(message) {
   errorDiv.style.zIndex = '1000';
   errorDiv.innerHTML = `
     ${message}
-    <button onclick="window.location.href='/';">Log In</button>
-    <button onclick="window.location.reload();">Retry</button>
+    <button onclick="navigateTo('/')">Log In</button>
+    <button onclick="window.location.reload()">Retry</button>
   `;
   document.body.appendChild(errorDiv);
 }
@@ -497,10 +494,31 @@ function showLLMWarning(prolificId) {
   `;
   document.body.appendChild(warning);
 
+  const toggleSwitch = document.getElementById('toggle-response');
+  if (toggleSwitch) {
+    toggleSwitch.checked = true;
+    toggleSwitch.disabled = false;
+    toggleSwitch.addEventListener('change', (event) => {
+      if (toggleSwitch.checked) {
+        saveLLMConsent(prolificId, true, true);
+      } else {
+        event.preventDefault();
+        toggleSwitch.checked = true;
+      }
+    });
+  }
+
   document.getElementById('llm-settings').addEventListener('click', () => {
-    console.log('Navigating to Your Account page');
-    window.location.href = '/account-settings';
+    navigateTo('/account-settings');
   });
+
+  const optOutBtn = document.getElementById('opt-out-btn');
+  if (optOutBtn) {
+    optOutBtn.addEventListener('click', () => {
+      console.log('Opt-out button clicked');
+      showOptOutConfirmation(prolificId);
+    });
+  }
 }
 
 function saveLLMConsent(prolificId, useData, toggleResponse, redirect = true) {
@@ -518,14 +536,14 @@ function saveLLMConsent(prolificId, useData, toggleResponse, redirect = true) {
       }
       console.log('LLM consent saved');
       if (redirect) {
-        window.location.href = '/home';
+        navigateTo('/home');
       }
       return res.json();
     })
     .catch(err => {
       console.error('Save LLM consent error:', err.message);
       if (redirect) {
-        window.location.href = '/home';
+        navigateTo('/home');
       }
       throw err;
     });
@@ -630,8 +648,15 @@ function loadLLMConsent() {
           const toggleSwitch = document.getElementById('toggle-response');
           if (toggleSwitch) {
             toggleSwitch.checked = true;
-            toggleSwitch.disabled = true;
-            console.log('Toggle set to', toggleSwitch.checked, 'and disabled');
+            toggleSwitch.disabled = false;
+            toggleSwitch.addEventListener('change', (event) => {
+              if (toggleSwitch.checked) {
+                saveLLMConsent(prolificId, true, true, false);
+              } else {
+                event.preventDefault();
+                toggleSwitch.checked = true;
+              }
+            });
           } else {
             console.warn('Toggle switch element not found');
           }
@@ -797,11 +822,7 @@ function showOptOutConfirmation(prolificId) {
   document.body.appendChild(confirmationPopup);
 
   document.getElementById('cancel-opt-out').addEventListener('click', () => {
-    console.log('Cancel opt-out clicked, keeping toggle on');
-    const toggleSwitch = document.getElementById('toggle-response');
-    if (toggleSwitch) {
-      toggleSwitch.checked = true;
-    }
+    console.log('Cancel opt-out clicked');
     confirmationPopup.remove();
   });
 

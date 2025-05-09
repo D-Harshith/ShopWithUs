@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script type="text/javascript">
+    function showAlert() {
+        window.history.forward();
+    }
+    setTimeout("showAlert()", 0);
+    window.onunload = function () { null };
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thank You - ShopWithUs</title>
@@ -22,7 +29,7 @@
   <script>
     // Redirect to Qualtrics survey after 5 seconds
     setTimeout(() => {
-      window.location.href = 'YOUR_QUALTRICS_SURVEY_URL_HERE'; // Replace with the actual Qualtrics URL
+      window.location.href = 'https://iu.co1.qualtrics.com/jfe/form/SV_23HPRfQqKyWHCXs'; 
     }, 5000);
   </script>
 </body>
